@@ -3,7 +3,7 @@
 
 **Type:** FeedbackPlaytest iteration (not a numbered Phase 4)
 **Date:** 2026-11-24
-**Branch:** `feedback-playtest` (base `260cb10`, final code `3c2d0e3`, this report commit follows)
+**Branch:** `feedback-playtest` (base `260cb10`, final code `22d319d`, this report commit follows)
 **Spec:** `E:\Download\DevLife_Data_Routing_Validation_Gameplay_Proposal.md`
 **Plan:** `docs/superpowers/plans/2026-11-24-feedback-playtest.md`
 **Engine:** Unity 6000.6.7f1
@@ -136,13 +136,23 @@ Verification after the fix: EditMode **204 / 204**, PlayMode **63 / 63**, exit 0
 
 Another screenshot showed that the Input card said nothing about its data, and IF/OR had no visible way to choose a data field.
 
-- **Input card** now previews the collection (`4 ไฟล์` + up to four names) and has a **ดูข้อมูล** button that opens the item/destination inspector; the editable bool toggle is gone.
-- **IF card** shows a red **ยังไม่ได้ตั้งค่า (กด 'ตั้งค่า')** line and a **ตั้งค่า** button. The button opens the field/operator/value panel; after configuring, the card shows the rule (for example `ชนิดไฟล์ เท่ากับ Video`) and the ports stay TRUE/FALSE.
+- **Input card** previews the collection (`4 ไฟล์: article_01.txt, cover_01.png …`) and has a **ดูข้อมูล** button that opens the item/destination inspector; the editable bool toggle is gone.
+- **IF card** now has the controls **inside the card**: a field dropdown at the top (opens an option list), an operator row in the middle that cycles on click, and a value dropdown below that lists the selected field's values. The card shows its rule and the ports stay TRUE/FALSE. The toolbar `ตั้งค่า IF` panel remains as an alternative.
+- **Node typography** is stronger: the header is 20 pt bold in a wider strip, port labels are 12 pt bold, and row/button labels are 13 pt — the card stays 288×240, it is not a skinny reference-style card.
+- **Port hover tooltips** fade in near the pointer: IF ports read `if True · ใช่` / `if False · ไม่ใช่`; other ports show their label.
 - **OR card** shows **รวมทุกเส้นทาง**: OR is a boolean merge of paths and has no data field to filter, so there is no type selector. The typed choice belongs to IF nodes.
-- Wiring fallback: the toolbar assigns the data/settings panels to the workspace at runtime, so no scene rebuild is needed for this update.
+- Wiring fallback: the toolbar assigns the data/settings/session references to the workspace at runtime, so no scene rebuild is needed for this update.
 
-Tests assert the Input preview/button, the IF rule on the card, and the OR label.
+### Third UX pass — final review and fixes
+A fresh-context review of the inline-controls pass found:
+
+- **Critical:** `SetSlotLabel` resized the node root instead of the label, collapsing every Input/OR card. Fixed; the card rect (288×240) is now asserted.
+- **Important:** the Input preview overlapped the data button (shortened to a one/two-line summary); the option popup was positioned with canvas-centre coordinates on a top-left panel (converted and clamped); inline IF edits had no undo entry (wrapped in one history action); the popup/tooltip could outlive work mode (hidden on mission change/disable, Escape closes; callbacks cleared).
+- **Minor:** tooltip edge clamping/clipping and stale text (fixed); tests for popup open/placement, row-drag protection, card size and tooltip text (added).
+- The popup and tooltip are created at runtime above the canvas rather than as hand-editable scene objects; this is a deliberate shortcut for this iteration and is recorded as a limitation.
+
+Tests assert the Input preview/button and card size, the inline field dropdown opening below its row, the operator/value changes, the row-drag guard, the header size, the IF rule, the OR label and the port tooltip text.
 
 ## 10. Verdict
 
-**FeedbackPlaytest implementation complete for the automated scope.** The idea works end-to-end in tests and in the shipped scene flow, and the review's three Important traps are closed. It is ready for a human playtest focused on: can a beginner configure an IF without help, understand the TRUE/FALSE flow, and recover from Clear/restart; and whether the data panel and settings card are readable in the Game view.
+**FeedbackPlaytest implementation complete for the automated scope.** The idea works end-to-end in tests and in the shipped scene flow, and the routing and UI reviews' Critical/Important findings are closed. It is ready for a human playtest focused on: can a beginner configure an IF from the card without help, read the TRUE/FALSE branches and hover tooltips, understand the data preview, and recover from Clear/restart; and whether the Thai text and node cards are readable in the Game view.
