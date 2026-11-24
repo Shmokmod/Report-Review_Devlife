@@ -3,7 +3,7 @@
 
 **Type:** FeedbackPlaytest iteration (not a numbered Phase 4)
 **Date:** 2026-11-24
-**Branch:** `feedback-playtest` (base `260cb10`, final code `fdeb42c`, this report commit follows)
+**Branch:** `feedback-playtest` (base `260cb10`, final code `d59b1a6`, this report commit follows)
 **Spec:** `E:\Download\DevLife_Data_Routing_Validation_Gameplay_Proposal.md`
 **Plan:** `docs/superpowers/plans/2026-11-24-feedback-playtest.md`
 **Engine:** Unity 6000.6.7f1
@@ -83,7 +83,6 @@ Run in an isolated copy at `fdeb42c`:
 |---|---|---|---|
 | EditMode | **204 / 204** | 0 | `Logs/editmode-results-playtest.xml` |
 | PlayMode | **63 / 63** | 0 | `Logs/playmode-results-playtest.xml` |
-
 New coverage includes: configured IF by field, chained exclusive branches, operators, item flow with/without an item, unconfigured IF failure, boundary seeding/promotion, boundary labels/config serialization, per-item correct/wrong/unprocessed/double, unassigned Output failure, node library hiding boundaries in routing mode, data panel/settings in the real scene, a full routing solve, Clear/Undo boundary survival, routing save/load, and chapter progression through all seven main missions.
 
 ## 7. Fresh-context review vs the docs — findings and fixes
@@ -121,6 +120,18 @@ A reviewer with no prior context compared the diff to the proposal. Dispositions
 - Old saved graphs of repurposed missions need one Clear/restart.
 - The `OR` node is a new type justified by routing merges; no other node types were added.
 
-## 9. Verdict
+## 9. Playtest fix from the first screenshot
+
+The first in-game screenshot showed the seeded boundaries still titled **“ส่งผลลัพธ์ (Output)”**, with delete (X) buttons visible and an editable `ค่า: จริง` control on the Input. Root cause: `NodeView` binds when the node is added, before the seeder/serializer applies `Label`, `Boundary` and `Config`.
+
+Fix:
+- `NodeView.RefreshIdentity()` re-applies the per-instance label, boundary delete visibility, and value control visibility.
+- `GraphWorkspace.RefreshNodeViews()` is called after boundary seeding and after loading a job graph.
+- Boundary nodes never show the close button or an editable value control.
+- The PlayMode routing test now asserts the destination label on the Output card, hidden close buttons, and the hidden Input value control.
+
+Verification after the fix: EditMode **204 / 204**, PlayMode **63 / 63**, exit 0. Re-open the job (or restart Play Mode) to see the corrected labels.
+
+## 10. Verdict
 
 **FeedbackPlaytest implementation complete for the automated scope.** The idea works end-to-end in tests and in the shipped scene flow, and the review's three Important traps are closed. It is ready for a human playtest focused on: can a beginner configure an IF without help, understand the TRUE/FALSE flow, and recover from Clear/restart; and whether the data panel and settings card are readable in the Game view.
