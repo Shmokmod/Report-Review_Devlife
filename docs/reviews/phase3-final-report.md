@@ -14,7 +14,7 @@ Phase 3's approved systems are implemented, wired into the shipped scenes, and c
 
 ## 2. Repository and environment
 
-- Branch `main`; final code HEAD `33a1850` (this report update follows).
+- Branch `main`; final code HEAD `6b61230` (this report update follows).
 - Unity 6000.6.7f1; URP 17.6.0; Test Framework 1.8.0; uGUI 2.6.0.
 - Working tree: only untracked `Art/` (design art) and `graphify-out/` (local knowledge graph).
 - Scene backups: `Backups/CleanRoom_20261124_162808.unity`, `Backups/Room3D_<stamp>.unity` (git-ignored).
@@ -23,14 +23,14 @@ Phase 3's approved systems are implemented, wired into the shipped scenes, and c
 
 | Suite | Baseline (M0) | Final | Exit | Evidence |
 |---|---|---|---|---|
-| EditMode | 123 / 123 | **190 / 190** | 0 | `Logs/editmode-results-final.xml` |
-| PlayMode | 43 / 43 | **58 / 58** | 0 | `Logs/playmode-results-final.xml` |
+| EditMode | 123 / 123 | **191 / 191** | 0 | `Logs/editmode-results-final.xml` |
+| PlayMode | 43 / 43 | **62 / 62** | 0 | `Logs/playmode-results-final.xml` |
 
 No skipped tests. Suites ran in an isolated copy of the tracked tree with Unity batchmode; the developer's Editor and real save folder were not touched (PlayMode isolation via `GameSession.SaveDirectoryOverrideForTests`).
 
 ## 4. Gameplay loop walkthrough (as implemented)
 
-Room3D (WASD, E at the PC) → desk view with the computer **off** → press power → zoom into the desktop → Email/Marketplace accept a job → Work app opens the job and the Node Editor → build/run the graph → failing runs show mismatch + concept + guided feedback, with optional hints → a passing run auto-completes exactly once, grants Money/XP, saves → the next Main Story mission unlocks; all chapter missions plus the Final Project complete the chapter, show the Completion Summary, advance Career Rank, unlock the next chapter and the third Optional slot → Stop Using (zoom out, computer on) or Turn Off (screen dark) → Leave Desk → room; Profile from the HUD/Escape shows the same data → close and continue.
+Room3D (WASD, E at the PC) → desk view with the computer **off** → press power → zoom into the desktop → Email/Marketplace accept a job → full-screen Thai brief → **รับทราบ** → Work app opens the job and the Node Editor → build/run the graph → failing runs show mismatch + concept + guided feedback, with optional hints → a passing run auto-completes exactly once, grants Money/XP, saves, then shows the **victory popup** (stars, rewards, next / replay / menu) → the next Main Story mission unlocks; all chapter missions plus the Final Project complete the chapter, show the Completion Summary, advance Career Rank, unlock the next chapter and the third Optional slot → Stop Using (zoom out, computer on) or Turn Off (screen dark) → Leave Desk → room; Profile from the HUD/Escape shows the same Thai dashboard → close and continue.
 
 ## 5. Job lifecycle and slots
 
@@ -59,10 +59,12 @@ Room3D (WASD, E at the PC) → desk view with the computer **off** → press pow
 ## 9. Desktop, profile and room
 
 - Desktop apps: Email, Marketplace, Work, Profile, Store, inside the monitor area while zoomed into computer mode. The desk view starts with the computer off; Power On zooms in, Stop Using zooms out with the computer on, Turn Off also darkens the screen, and Leave Desk returns to the room.
+- A new job opens with a mandatory full-screen Thai brief (**รับทราบ** before play); winning shows a victory popup with stars, rewards and next / replay / main-menu actions.
+- The UI and authored content are Thai (Noto Sans Thai, OFL); technical output/debug lines remain English.
 - Developer Dashboard: identity, Money, Level + XP to next level, Career Rank, Chapter progress, mission count, optional slots, hardware, Skills, Achievements, Career Roadmap.
 - Entry points: desktop Profile app, Room3D HUD button, Escape (pause). All use the same formatter; the room reads the same save file.
 - Room stays the functional hub; no new rooms, NPCs or life simulation.
-- The power workflow and its sub-agent review fixes are detailed in `phase3-full-report.md` §21.
+- The power workflow and its sub-agent review fixes are detailed in `phase3-full-report.md` §21; the UX/Thai pass is §22.
 
 ## 10. Economy scope
 
@@ -114,4 +116,4 @@ Certification/certificates; Convert Selection to Module and automatic ports; reu
 
 ## 16. Explicit statement
 
-The Phase 3 **implementation** is complete against the approved scope. **Phase 3 is not declared fully accepted** until the manual Unity Editor acceptance in spec §20.3 is performed and recorded; everything else is covered by the 190 EditMode and 58 PlayMode passing tests at HEAD `33a1850`.
+The Phase 3 **implementation** is complete against the approved scope. **Phase 3 is not declared fully accepted** until the manual Unity Editor acceptance in spec §20.3 is performed and recorded; everything else is covered by the 191 EditMode and 62 PlayMode passing tests at HEAD `6b61230`.

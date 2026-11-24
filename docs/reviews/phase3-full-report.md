@@ -6,7 +6,7 @@
 **Branch:** `main`
 **Report date:** 2026-11-24
 **Starting HEAD:** `8b61d44` (Phase 3 M0 baseline)
-**Final code HEAD:** `33a1850` (documentation through `cde4f15`, this report commit follows)
+**Final code HEAD:** `6b61230` (this report commit follows)
 **Spec:** `E:\Download\DevLife_Phase03_Core_Gameplay_Loop_AI_Agent_Specification.md`
 **Roadmap:** `docs/superpowers/plans/2026-11-24-devlife-phase03-m0-audit-and-roadmap.md`
 
@@ -35,7 +35,7 @@ All approved system work is implemented and covered by automated tests:
 
 ## 2. Repository state
 
-- `main` at `33a1850`; working tree clean except untracked `Art/` (design art) and `graphify-out/` (local knowledge graph).
+- `main` at `6b61230`; working tree clean except untracked `Art/`, `graphify-out/` and the separate `Git_Review&Report/` clone.
 - `git diff --shortstat 8b61d44..HEAD`: **132 files changed, 18,920 insertions(+), 3,626 deletions(-)**.
   - 104 files added, 28 modified, 0 deleted.
   - Most deletions/insertions are the four full scene regenerations (`CleanRoom` ×3, `Room3D` ×1), which rewrite generated YAML.
@@ -48,8 +48,8 @@ All approved system work is implemented and covered by automated tests:
 
 | Suite | M0 baseline | Final | Failed | Skipped | Exit |
 |---|---|---|---|---|---|
-| EditMode | 123 / 123 | **190 / 190** | 0 | 0 | 0 |
-| PlayMode | 43 / 43 | **58 / 58** | 0 | 0 | 0 |
+| EditMode | 123 / 123 | **191 / 191** | 0 | 0 | 0 |
+| PlayMode | 43 / 43 | **62 / 62** | 0 | 0 | 0 |
 
 Method: the tracked project was copied to an isolated directory and both suites were run with Unity batchmode:
 `Unity -batchmode -projectPath <copy> -runTests -testPlatform <EditMode|PlayMode> -testResults <copy>/Logs/<platform>-results.xml`.
@@ -78,7 +78,7 @@ Evidence in `Logs/` (git-ignored, retained locally): `editmode-results-m0.xml`, 
 | 13 | Full Developer Dashboard (3 entry points) | Implemented (desktop, HUD, Escape) |
 | 14 | Minimal hardware/software/cosmetic economy | Implemented (Store, gate, purchase persistence) |
 | 15 | Nested Subgraph, create from scratch | Implemented (positional port mapping; see limitations) |
-| 16 | Integration + regression tests | Implemented (190 EditMode + 58 PlayMode, all green) |
+| 16 | Integration + regression tests | Implemented (191 EditMode + 62 PlayMode, all green) |
 
 FUTURE-READY items were not built (certification, Convert Selection, automatic ports, shared modules, expanded OS, NPCs, advanced Profile, new data types, client review, multi-slot/cloud saves). OUT-OF-SCOPE items were not started.
 
@@ -97,6 +97,7 @@ FUTURE-READY items were not built (certification, Convert Selection, automatic p
 | M6 Nested modules | `d4fe8b0` | Create module, ports, breadcrumb, execution, cycle safety, save/load, scene rebuild #3 |
 | M7 Dashboard + Room | `0848b2d`, `079cbe1` | Dashboard formatter, desktop Profile app, room HUD + Escape overlay, `Room3D` rebuild |
 | Power workflow update + review fixes | `3026081`, `33a1850` | Monitor off/on, zoom, Stop Using vs Turn Off, desk exit, modal-safe Escape, raycast test |
+| UX + Thai pass | `6b61230` | Full-screen brief + acknowledge, victory panel, IF port labels, graph reset on mission change, Thai font/content/UI |
 | M8 Validation + report | `15c44eb`, `cde4f15` + this report | Full-suite validation, acceptance checklist, final report |
 
 Review discipline: M1 had a fresh-context review that found 1 Critical + 4 Important data-loss paths (newer-save fallback, backup poisoning, unreadable primary, graph wipe on unknown definition, missing-primary backup). Each was fixed with a failing test first; five minors were deferred and recorded.
@@ -110,10 +111,10 @@ Review discipline: M1 had a fresh-context review that found 1 Critical + 4 Impor
 3. **Desktop** — five apps: Email, Marketplace, Work, Profile, Store.
 4. **Email** — full job feed (Main Story + Optional), accept from the list.
 5. **Marketplace** — Optional jobs only, accept within slot limits.
-6. **Work** — accepted jobs only; Open switches the active job graph; Continue/Restart dialog when a graph is saved; Cancel behind confirmation.
-7. **Work Mode** — the existing Node Editor: add/drag/connect/knife/group/undo/zoom/pan, Mission Brief with Requirements for the Final Project, Hint button, Run.
+6. **Work** — accepted jobs only; Open switches the active job graph; Continue/Restart dialog when a graph is saved; Cancel behind confirmation. Opening a job shows the **full-screen mission brief**; the player must press **รับทราบ** before the editor is usable.
+7. **Work Mode** — the existing Node Editor: add/drag/connect/knife/group/undo/zoom/pan, Mission Brief with Requirements for the Final Project, Hint button, Run. The brief card can be tapped to reopen the full-screen version.
 8. **Run** — `TestRunner` evaluates every configured case against the real executor; results show Accuracy, Cost, Stars; Visual Execution highlights the actual evaluated order; failures append progressive feedback.
-9. **Auto-complete** — a passing run completes an accepted job exactly once: rewards, best cost/stars, story progress, chapter check, save. Repeated runs cannot duplicate first-completion rewards.
+9. **Auto-complete** — a passing run completes an accepted job exactly once: rewards, best cost/stars, story progress, chapter check, save, then a **victory popup** with stars, rewards and next / replay / main-menu actions.
 10. **Chapter end** — the Final Project completing after every required Main mission shows the Chapter Summary, advances rank, unlocks the next chapter and the third Optional slot.
 11. **Profile** — same dashboard from desktop, HUD or Escape; room reads the same save file.
 12. **Persistence** — leave Work Mode or quit: profile, active job, every job graph, module data and purchases persist; relaunch resumes.
@@ -323,6 +324,8 @@ Full machine-readable inventory: `git diff --name-status 8b61d44..33a1850` (104 
 12. Certification, Convert Selection, automatic ports, shared modules, multi-slot/cloud saves, NPCs and expanded OS features are intentionally absent.
 13. Unity prints a `Serialization depth limit 10` warning while scanning the nested module DTOs in PlayMode; module save/load tests pass and the warning is a console-cleanliness item.
 14. The desktop is intentionally visible only in zoomed computer mode; the zoomed-out desk view shows the room screen so the desk exit stays free.
+15. Technical output/debug/error lines remain English; node boolean values are shown as `true/false`.
+16. Thai text uses legacy `Text` with Noto Sans Thai (OFL); long-string wrapping and card fit need the manual Game-view pass.
 
 ---
 
@@ -428,7 +431,7 @@ Certification/certificates; Convert Selection to Module with automatic ports; mo
 - [x] Business logic lives outside UI scripts
 - [x] `CleanRoom` remains inspectable/editable in Edit Mode
 - [x] Builder does not silently overwrite the saved scene
-- [x] EditMode and PlayMode suites pass; exact counts reported (190/190, 58/58)
+- [x] EditMode and PlayMode suites pass; exact counts reported (191/191, 62/62)
 - [ ] Manual test evidence covers the integrated loop (NOT VERIFIED)
 - [x] Known limitations and unverified behavior disclosed
 
@@ -466,6 +469,30 @@ PlayMode output still contains Unity's `Serialization depth limit 10 exceeded at
 
 ---
 
-## 22. Final statement
+## 22. UX + Thai pass (2026-11-24)
 
-Phase 3's approved implementation is delivered and green at `33a1850` (190 EditMode + 58 PlayMode, exit 0). The remaining gate is human acceptance of the rendered experience (spec §20.3): open the project, play the loop end-to-end, capture screenshots/video, and record any layout or clarity fixes. Until that is done, the correct status is **"Phase 3 implementation complete; manual acceptance outstanding"**, not an unconditional sign-off.
+### Requested changes and implementation
+1. **Mission Brief unreadable / full-screen + Thai.** The Mission Brief card remains as the quick summary and is now clickable (plus an explicit button) to open a 980×660 full-screen brief with the description, input slots, expected result, requirements and cost/cases. Opening a job always shows this brief first and requires **รับทราบ** (acknowledge) before the editor is usable.
+2. **IF node clarity.** Every node port now renders a label inside the card; IF outputs are `จริง / TRUE` in green and `เท็จ / FALSE` in red, while other ports stay neutral. Input port labels are counter-mirrored so they read normally.
+3. **Reset on mission change.** `GraphWorkspace` clears the graph whenever the selected mission changes; a suppression flag keeps the restored graph when a job is opened from its save.
+4. **Win popup.** A victory panel shows the stars (ดาว n/3), cost and Money/XP rewards, with **รับภารกิจต่อไป** (accept the next Main Story mission), **เล่นซ้ำ** (practice replay; no duplicate first-completion rewards) and **กลับเมนูหลัก** (return to the room).
+5. **Mandatory briefing before play.** Implemented with the same full-screen brief; the overlay blocks the editor until acknowledged.
+
+### Thai localization
+- A Thai-capable font, **Noto Sans Thai Regular** (SIL OFL 1.1, license shipped as `Assets/DevLife/Resources/DevLifeThai-OFL.txt`), is imported to `Assets/DevLife/Resources/DevLifeThai.ttf` and used by both scene builders, the node prefabs, the job row prefab and runtime port labels.
+- Mission names/descriptions/slots/hints/stages/objectives, chapter/rank/shop data, all main UI labels (toolbar, cards, desktop, dialogs, store, dashboard, chapter summary, brief/victory, room overlay) and result summaries are Thai.
+- Technical output/debug lines and internal error strings remain English (they are developer-facing), as do node values `true/false` in the execution log.
+
+### Verification
+EditMode **191 / 191** and PlayMode **62 / 62**, exit 0 (evidence: `Logs/editmode-results-final.xml`, `Logs/playmode-results-final.xml`). New coverage: full-screen brief opens on accept and requires acknowledge; the card reopens it; victory shows stars and all three actions; replay resets the job; mission change clears the graph; IF port labels exist with the correct colours; the project font contains Thai glyphs and the UI separator.
+
+### Limitations
+- The Thai layout (line wrapping, clipped long strings, brief/victory card fit) is not visually verified in the Game view.
+- Legacy `Text` is used; very long Thai descriptions may need wrapping/scroll adjustments after a manual pass.
+- Font licensing is satisfied by the shipped OFL text; replacing it with another Thai font only requires swapping the asset.
+
+---
+
+## 23. Final statement
+
+Phase 3's approved implementation is delivered and green at `6b61230` (191 EditMode + 62 PlayMode, exit 0). The remaining gate is human acceptance of the rendered experience (spec §20.3): open the project, play the loop end-to-end, capture screenshots/video, and record any layout or clarity fixes. Until that is done, the correct status is **"Phase 3 implementation complete; manual acceptance outstanding"**, not an unconditional sign-off.
