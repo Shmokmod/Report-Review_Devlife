@@ -3,7 +3,7 @@
 
 **Type:** FeedbackPlaytest iteration (not a numbered Phase 4)
 **Date:** 2026-11-24
-**Branch:** `feedback-playtest` (base `260cb10`, final code `d59b1a6`, this report commit follows)
+**Branch:** `feedback-playtest` (base `260cb10`, final code `3c2d0e3`, this report commit follows)
 **Spec:** `E:\Download\DevLife_Data_Routing_Validation_Gameplay_Proposal.md`
 **Plan:** `docs/superpowers/plans/2026-11-24-feedback-playtest.md`
 **Engine:** Unity 6000.6.7f1
@@ -131,6 +131,17 @@ Fix:
 - The PlayMode routing test now asserts the destination label on the Output card, hidden close buttons, and the hidden Input value control.
 
 Verification after the fix: EditMode **204 / 204**, PlayMode **63 / 63**, exit 0. Re-open the job (or restart Play Mode) to see the corrected labels.
+
+### Second playtest fix: data preview and node-level configuration
+
+Another screenshot showed that the Input card said nothing about its data, and IF/OR had no visible way to choose a data field.
+
+- **Input card** now previews the collection (`4 ไฟล์` + up to four names) and has a **ดูข้อมูล** button that opens the item/destination inspector; the editable bool toggle is gone.
+- **IF card** shows a red **ยังไม่ได้ตั้งค่า (กด 'ตั้งค่า')** line and a **ตั้งค่า** button. The button opens the field/operator/value panel; after configuring, the card shows the rule (for example `ชนิดไฟล์ เท่ากับ Video`) and the ports stay TRUE/FALSE.
+- **OR card** shows **รวมทุกเส้นทาง**: OR is a boolean merge of paths and has no data field to filter, so there is no type selector. The typed choice belongs to IF nodes.
+- Wiring fallback: the toolbar assigns the data/settings panels to the workspace at runtime, so no scene rebuild is needed for this update.
+
+Tests assert the Input preview/button, the IF rule on the card, and the OR label.
 
 ## 10. Verdict
 
